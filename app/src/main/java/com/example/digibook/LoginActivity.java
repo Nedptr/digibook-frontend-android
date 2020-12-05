@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.digibook.Networking.APIclient;
+import com.example.digibook.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -20,6 +22,12 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import org.w3c.dom.Text;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -82,8 +90,39 @@ public class LoginActivity extends AppCompatActivity {
         loginUsername = findViewById(R.id.loginUsername);
         loginPassword = findViewById(R.id.loginPassword);
         loginError = findViewById(R.id.loginError);
+        String username = loginUsername.getText().toString();
+        String password = loginPassword.getText().toString();
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(password);
 
+        // doing the call
+        Call<String> loginCall = APIclient.apIinterface().loginUser(user);
+        loginCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, response.body() ,Toast.LENGTH_SHORT).show();
+                    assert response.body() != null;
+                    Log.d("loginNet", response.body());
+                    loginError.setVisibility(View.INVISIBLE);
+                } else {
+                    Log.d("loginNet", "unsucc request");
+                    loginError.setVisibility(View.VISIBLE);
+                    try {
+                        loginError.setText(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("loginNet1" , t.toString());
+            }
+        });
     }
 
     private void signIn() {

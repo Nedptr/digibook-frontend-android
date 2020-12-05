@@ -23,6 +23,9 @@ public interface APIinterface {
     @POST("api/user/register")
     Call<User> registerUser(@Body User user);
 
+    @POST("api/user/login")
+    Call<String> loginUser(@Body User user);
+
 /*    @POST("api/user/register")
     Call<JsonObject> registerUser(@Body User user);*/
 
