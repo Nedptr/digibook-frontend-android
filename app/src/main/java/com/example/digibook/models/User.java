@@ -24,9 +24,6 @@ public class User {
     @SerializedName("__v")
     @Expose
     private Integer v;
-    @SerializedName("error")
-    @Expose
-    private String message;
 
     public String getId() {
         return id;
@@ -74,13 +71,5 @@ public class User {
 
     public void setV(Integer v) {
         this.v = v;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

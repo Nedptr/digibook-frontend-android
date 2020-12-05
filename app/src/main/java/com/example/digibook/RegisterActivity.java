@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,14 @@ import android.widget.Toast;
 
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.models.User;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO : put all this in a function.
+                // TODO : put all this in a function & confirm password!
                 String username = regUsername.getText().toString();
                 String email = regEmail.getText().toString();
                 String password = regPassword.getText().toString();
@@ -69,20 +78,25 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if(response.isSuccessful()){
-                            Log.d("Net2", String.valueOf(response.code()));
+                            Log.d("RegisterNet", String.valueOf(response.code()));
                             Toast.makeText(RegisterActivity.this,"Successfully Registered!",Toast.LENGTH_SHORT).show();
                             Intent goProfile = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(goProfile);
                         }else{
-                            Log.d("Net1", String.valueOf(response.code()));
+                            Log.d("RegisterNet", "unsucc response");
                             errorText.setVisibility(View.VISIBLE);
-                            //Log.d("thiserror", String.valueOf(response.body()));
+                            try {
+                                errorText.setText(response.errorBody().string());
+                            } catch (IOException e) {
+                                Log.d("RegisterNet", "failed to string errorBody()");
+                                e.printStackTrace();
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Log.d("Net1", t.toString());
+                        Log.d("RegisterNet", t.toString());
                     }
                 });
 

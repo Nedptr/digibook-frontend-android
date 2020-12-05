@@ -1,6 +1,9 @@
 package com.example.digibook.Networking;
 
 import com.example.digibook.models.User;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -19,5 +22,8 @@ public interface APIinterface {
 
     @POST("api/user/register")
     Call<User> registerUser(@Body User user);
+
+/*    @POST("api/user/register")
+    Call<JsonObject> registerUser(@Body User user);*/
 
 }

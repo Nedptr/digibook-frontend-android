@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.w3c.dom.Text;
+
 public class LoginActivity extends AppCompatActivity {
 
 
@@ -24,6 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     SignInButton signInButton;
     TextView registerAct;
     GoogleSignInClient mGoogleSignInClient;
+    Button loginButton;
+    EditText loginUsername;
+    EditText loginPassword;
+    TextView loginError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,15 @@ public class LoginActivity extends AppCompatActivity {
         //Initializing Views
         signInButton = findViewById(R.id.sign_in_button);
         registerAct = findViewById(R.id.login);
+        loginButton = findViewById(R.id.loginButton);
+
+        //login Button onclick listener
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginIn();
+            }
+        });
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -49,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
             }
         });
+
+        //Go to Register Activity
         registerAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void loginIn() {
+        loginUsername = findViewById(R.id.loginUsername);
+        loginPassword = findViewById(R.id.loginPassword);
+        loginError = findViewById(R.id.loginError);
+
 
     }
 
