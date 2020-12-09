@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if(response.isSuccessful()){
                     userList = response.body();
-                    Log.d("Net", userList.get(0).getEmail());
+                    //Log.d("Net", userList.get(0).getEmail());
                 }else{
                     Log.d("Net", "error fel else ya bro");
                 }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.models.User;
+import com.example.digibook.utilities.CurrentSession;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -90,10 +91,10 @@ public class LoginActivity extends AppCompatActivity {
         loginUsername = findViewById(R.id.loginUsername);
         loginPassword = findViewById(R.id.loginPassword);
         loginError = findViewById(R.id.loginError);
-        String username = loginUsername.getText().toString();
+        String email = loginUsername.getText().toString();
         String password = loginPassword.getText().toString();
         User user = new User();
-        user.setEmail(username);
+        user.setEmail(email);
         user.setPassword(password);
 
         // doing the call
@@ -106,6 +107,14 @@ public class LoginActivity extends AppCompatActivity {
                     assert response.body() != null;
                     Log.d("loginNet", response.body());
                     loginError.setVisibility(View.INVISIBLE);
+
+                    //Create CurrentSession
+                    CurrentSession.CurrentUserEmail = email;
+                    CurrentSession.CurrentUserToken = "";
+
+                    CurrentSession.getCurrentUser(email);
+
+
                 } else {
                     Log.d("loginNet", "unsucc request");
                     loginError.setVisibility(View.VISIBLE);
