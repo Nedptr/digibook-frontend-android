@@ -108,7 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("loginNet", response.body());
                     loginError.setVisibility(View.INVISIBLE);
 
-                    //Create CurrentSession
+                    //CurrentSession Handler:
+                    //assign static variables!
+                    //I might need to create a CurrentSession instance here to access none static variables and remove public.
                     CurrentSession.CurrentUserEmail = email;
                     CurrentSession.CurrentUserToken = "";
 
