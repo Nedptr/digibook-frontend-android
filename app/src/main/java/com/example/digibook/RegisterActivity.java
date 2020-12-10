@@ -64,14 +64,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO : put all this in a function & confirm password!
-                String username = regUsername.getText().toString();
+                String name = regUsername.getText().toString();
                 String email = regEmail.getText().toString();
                 String password = regPassword.getText().toString();
-                String cpassword = regConfirmPassword.getText().toString();
+                String ConfirmPassword = regConfirmPassword.getText().toString();
                 User player = new User();
                 player.setEmail(email);
-                player.setName(username);
+                player.setName(name);
                 player.setPassword(password);
+                player.setConfirmPassword(ConfirmPassword);
                 //doing the call
                 Call<User> register = APIclient.apIinterface().registerUser(player);
                 register.enqueue(new Callback<User>() {

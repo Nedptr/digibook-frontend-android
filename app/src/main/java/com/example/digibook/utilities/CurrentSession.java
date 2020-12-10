@@ -23,13 +23,13 @@ public class CurrentSession {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 CurrentUser = response.body();
-                Log.d("test", CurrentUser.getName());
+                Log.d("CurrentSessionTest", CurrentUser.getName());
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.d("testerror", t.toString());
+                Log.d("CurrentSessionTestF", t.toString());
             }
         });
 

@@ -25,6 +25,10 @@ public class User {
     @Expose
     private Integer v;
 
+    @SerializedName("ConfirmPassword")
+    @Expose
+    private String ConfirmPassword;
+
     public String getId() {
         return id;
     }
@@ -73,5 +77,11 @@ public class User {
         this.v = v;
     }
 
+    public String getConfirmPassword() {
+        return ConfirmPassword;
+    }
 
+    public void setConfirmPassword(String cpassword) {
+        this.ConfirmPassword = cpassword;
+    }
 }
