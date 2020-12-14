@@ -37,9 +37,21 @@ public class SearchResultsRVAdapter extends RecyclerView.Adapter<SearchResultsRV
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         // set the data with holder.
-        holder.title.setText(bookdata.get(position).getVolumeInfo().getTitle());
-        holder.author.setText(bookdata.get(position).getVolumeInfo().getAuthors().toString());
-        Glide.with(context).load(bookdata.get(position).getVolumeInfo().getImageLinks().getThumbnail()).into(holder.bookimage);
+        if(bookdata.get(position).getVolumeInfo().getTitle() != null) {
+            holder.title.setText(bookdata.get(position).getVolumeInfo().getTitle());
+        }else{
+            holder.title.setText("N/A");
+        }
+        if(bookdata.get(position).getVolumeInfo().getAuthors() != null) {
+            holder.author.setText(bookdata.get(position).getVolumeInfo().getAuthors().toString());
+        }else{
+            holder.author.setText("N/A");
+        }
+        if(bookdata.get(position).getVolumeInfo().getImageLinks().getThumbnail() != null) {
+            Glide.with(context).load(bookdata.get(position).getVolumeInfo().getImageLinks().getThumbnail()).into(holder.bookimage);
+        }else{
+            Glide.with(context).load(R.drawable.ic_baseline_error_outline_24).into(holder.bookimage);
+        }
     }
 
     @Override

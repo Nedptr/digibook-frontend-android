@@ -37,4 +37,10 @@ public class SearchResults extends AppCompatActivity {
         ResRecyclerView.setAdapter(myAdapter);
         ResRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
