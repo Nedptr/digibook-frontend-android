@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.models.User;
+import com.example.digibook.models.booksearchmodels.BookSearch;
 import com.example.digibook.utilities.CurrentSession;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,6 +23,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -80,6 +83,31 @@ public class LoginActivity extends AppCompatActivity {
         registerAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("text", "Italians have a little joke, that the world is so hard a man must have two fathers to look after him, and that's why they have godfathers");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Call<BookSearch> SearchCall = APIclient.apIinterface().searchBook(json);
+                SearchCall.enqueue(new Callback<BookSearch>() {
+                    @Override
+                    public void onResponse(Call<BookSearch> call, Response<BookSearch> response) {
+                        if(response.isSuccessful()){
+                            Log.d("searchnet", "success");
+                            Log.d("searchnet", response.body().getItems().get(0).getVolumeInfo().getTitle().toString());
+                        }else {
+                            Log.d("searchnet", "UNsucc");
+                            Log.d("searchnet", response.errorBody().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BookSearch> call, Throwable t) {
+                        Log.d("searchnetFail", t.toString());
+                    }
+                });
+
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
