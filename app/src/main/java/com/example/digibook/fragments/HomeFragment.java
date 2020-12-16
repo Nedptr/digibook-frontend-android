@@ -1,14 +1,34 @@
 package com.example.digibook.fragments;
 
+import android.database.CursorIndexOutOfBoundsException;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.digibook.Networking.APIclient;
 import com.example.digibook.R;
+import com.example.digibook.SearchResultsRVAdapter;
+import com.example.digibook.models.Post;
+import com.example.digibook.utilities.CurrentSession;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +36,12 @@ import com.example.digibook.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    RecyclerView recyclerView;
+    //HomeRVAdapter myAdapter;
+    ImageView profilePic;
+    EditText textPost;
+    Button submitButton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +86,50 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View viewroot = inflater.inflate(R.layout.fragment_home, container, false);
+        recyclerView = viewroot.findViewById(R.id.homeRecyclerView);
+        profilePic = viewroot.findViewById(R.id.homeProfilePicture);
+        textPost = viewroot.findViewById(R.id.homeWritePost);
+        submitButton = viewroot.findViewById(R.id.homeAddPost);
+
+
+
+        Glide.with(getContext()).load(R.drawable.slide).into(profilePic);
+
+        //CurrentSession.getAllPosts();
+        Call<List<Post>> getPostsCall = APIclient.apIinterface().getallposts();
+        getPostsCall.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if(response.isSuccessful()) {
+                    HomeRVAdapter myAdapter = new HomeRVAdapter(getContext(), response.body());
+                    recyclerView.setAdapter(myAdapter);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, true);
+                    layoutManager.setStackFromEnd(true);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.scrollToPosition(0);
+                }else{
+                    Log.d("homeNet", "unsucc");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                Log.d("homeNet", t.toString());
+                t.printStackTrace();
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CurrentSession.addPost(textPost.getText().toString(), (HomeRVAdapter) recyclerView.getAdapter(), recyclerView, textPost);
+
+            }
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return viewroot;
     }
 }

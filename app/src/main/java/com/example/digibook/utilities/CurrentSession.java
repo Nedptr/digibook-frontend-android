@@ -1,22 +1,37 @@
 package com.example.digibook.utilities;
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.inputmethodservice.KeyboardView;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.os.TokenWatcher;
 import android.util.Log;
+import android.widget.Adapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.digibook.LoginActivity;
 import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.SearchResults;
+import com.example.digibook.fragments.HomeRVAdapter;
 import com.example.digibook.fragments.SearchFragment;
+import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
+import com.example.digibook.models.likepostResponse;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import java.util.zip.CheckedOutputStream;
 
 import okhttp3.MediaType;
@@ -77,6 +92,71 @@ public class CurrentSession {
             @Override
             public void onFailure(Call<BookSearch> call, Throwable t) {
                 Log.d("uploadImageNet", t.toString());
+            }
+        });
+    }
+
+    public static void addPost(String text, HomeRVAdapter myAdapter, RecyclerView recyclerView, EditText textview){
+        Post post = new Post();
+        post.setEmail(CurrentSession.CurrentUser.getEmail());
+        post.setName(CurrentSession.CurrentUser.getName());
+        post.setText(text);
+
+        Call<Post> addPostCall = APIclient.apIinterface().addPost(post);
+        addPostCall.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if(response.isSuccessful()){
+                    Log.d("debuging","itemcount before add : " + String.valueOf(myAdapter.getItemCount()));
+                    Log.d("debuging", "firstpost before: " + HomeRVAdapter.postData.get(0).getText());
+                    Log.d("debuging", "lastpost before: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                    HomeRVAdapter.postData.add(response.body());
+                    myAdapter.notifyDataSetChanged();
+                    Log.d("debuging","itemcount after add : " + String.valueOf(myAdapter.getItemCount()));
+                    Log.d("debuging", "firstpost after: " + HomeRVAdapter.postData.get(0).getText());
+                    Log.d("debuging", "lastpost after: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                    //Log.d("debuging", "current position: " + )
+                    recyclerView.scrollToPosition(myAdapter.getItemCount() - 1);
+                    textview.getText().clear();
+                    
+                }else{
+                    Log.d("HomeNet", "unsuc AddPost");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Log.d("homeNet", t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public static void likePost(String useremail, String owneremail, String postid, Button likebutton, TextView likecount, int position){
+        Call<likepostResponse> likepostCall = APIclient.apIinterface().likepost(useremail,owneremail,postid);
+        likepostCall.enqueue(new Callback<likepostResponse>() {
+            @Override
+            public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus().compareTo("Like")==0) {
+                        likebutton.setBackgroundColor(Color.BLUE);
+                        likecount.setTextColor(Color.BLUE);
+                    }else{
+                        likebutton.setBackgroundColor(Color.GRAY);
+                        likecount.setTextColor(Color.GRAY);
+                    }
+                    likecount.setText(response.body().getCount());
+                    List<String> newList;
+                    newList = response.body().getNewlikeslist();
+                    HomeRVAdapter.postData.get(position).setLikesList(newList);
+
+                } else {
+                    Log.d("homeNet", "unsucc likepost:  " + response.errorBody().toString());
+                }
+            }
+            @Override
+            public void onFailure(Call<likepostResponse> call, Throwable t) {
+                Log.d("homeNet",t.toString());
             }
         });
     }

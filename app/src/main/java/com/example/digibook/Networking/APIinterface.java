@@ -3,14 +3,17 @@ package com.example.digibook.Networking;
 import android.app.DownloadManager;
 
 
+import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
+import com.example.digibook.models.likepostResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -47,8 +50,13 @@ public interface APIinterface {
     @POST("booksearch/search")
     Call<BookSearch> uploadImage(@Part MultipartBody.Part file);
 
+    @GET("api/user/home/getallposts")
+    Call<List<Post>> getallposts();
 
-/*    @POST("api/user/register")
-    Call<JsonObject> registerUser(@Body User user);*/
+    @POST("api/user/home/addpost")
+    Call<Post> addPost(@Body Post post);
+
+    @GET("api/user/home/likepost/{currentUserEmail}/{postOwnerEmail}/{postID}")
+    Call<likepostResponse> likepost(@Path("currentUserEmail") String currentUserEmail, @Path("postOwnerEmail") String postOwnerEmail, @Path("postID") String postID);
 
 }
