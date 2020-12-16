@@ -24,6 +24,9 @@ public class User {
     @SerializedName("__v")
     @Expose
     private Integer v;
+    @SerializedName("picurl")
+    @Expose
+    private String picurl;
 
     @SerializedName("ConfirmPassword")
     @Expose
@@ -83,5 +86,13 @@ public class User {
 
     public void setConfirmPassword(String cpassword) {
         this.ConfirmPassword = cpassword;
+    }
+
+    public String getPicurl() {
+        return picurl;
+    }
+
+    public void setPicurl(String picurl) {
+        this.picurl = picurl;
     }
 }

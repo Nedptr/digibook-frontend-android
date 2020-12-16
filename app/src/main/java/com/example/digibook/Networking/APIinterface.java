@@ -59,4 +59,7 @@ public interface APIinterface {
     @GET("api/user/home/likepost/{currentUserEmail}/{postOwnerEmail}/{postID}")
     Call<likepostResponse> likepost(@Path("currentUserEmail") String currentUserEmail, @Path("postOwnerEmail") String postOwnerEmail, @Path("postID") String postID);
 
+    @Multipart
+    @POST("api/user/profile/uploadpic/{CurrentUserEmail}")
+    Call<String> uploadProfilePicture(@Path("CurrentUserEmail") String CurrentUserEmail, @Part MultipartBody.Part file);
 }

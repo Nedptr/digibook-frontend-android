@@ -73,7 +73,7 @@ public class CurrentSession {
     public static void uploadImageSearch(String imageurl, Context ct){
         File image = new File(imageurl);
         RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("textimage", image.getName() , reqbody);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("blabla", image.getName() , reqbody);
 
         Call<BookSearch> uploadCall = APIclient.apIinterface().uploadImage(part);
         uploadCall.enqueue(new Callback<BookSearch>() {
@@ -160,5 +160,34 @@ public class CurrentSession {
             }
         });
     }
+
+
+    //upload profile picture
+    public static void uploadProfilePicture(String imageurl, Context ct){
+        File image = new File(imageurl);
+        RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", image.getName() , reqbody);
+
+        Call<String> uploadCall = APIclient.apIinterface().uploadProfilePicture(CurrentUser.getEmail(), part);
+        uploadCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()){
+                    Log.d("uploadImageNet", response.body());
+/*                    Intent data = new Intent( ct, SearchResults.class);
+                    data.putExtra("data", response.body());
+                    ct.startActivity(data);*/
+                }else {
+                    Log.d("uploadImageNet", "unsuc");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("uploadImageNet", t.toString());
+            }
+        });
+    }
+
 
 }
