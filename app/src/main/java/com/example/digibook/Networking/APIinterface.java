@@ -62,4 +62,7 @@ public interface APIinterface {
     @Multipart
     @POST("api/user/profile/uploadpic/{CurrentUserEmail}")
     Call<String> uploadProfilePicture(@Path("CurrentUserEmail") String CurrentUserEmail, @Part MultipartBody.Part file);
+
+    @POST("api/user/profile/update/{email}/{password}")
+    Call<User> updateUser(@Path("email") String email, @Path("password") String password, @Body User user);
 }

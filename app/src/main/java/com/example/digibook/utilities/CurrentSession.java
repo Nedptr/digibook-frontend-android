@@ -14,14 +14,18 @@ import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.digibook.LoginActivity;
 import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
+import com.example.digibook.RegisterActivity;
 import com.example.digibook.SearchResults;
+import com.example.digibook.SettingsActivity;
 import com.example.digibook.fragments.HomeRVAdapter;
+import com.example.digibook.fragments.ProfileFragment;
 import com.example.digibook.fragments.SearchFragment;
 import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
@@ -40,6 +44,8 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class CurrentSession {
 
@@ -73,7 +79,7 @@ public class CurrentSession {
     public static void uploadImageSearch(String imageurl, Context ct){
         File image = new File(imageurl);
         RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("blabla", image.getName() , reqbody);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("textimage", image.getName() , reqbody);
 
         Call<BookSearch> uploadCall = APIclient.apIinterface().uploadImage(part);
         uploadCall.enqueue(new Callback<BookSearch>() {
@@ -189,5 +195,29 @@ public class CurrentSession {
         });
     }
 
+    public static void updateUser(User user, Context ct, String beforeUpdateEmail, String beforePassword){
+        Call<User> updateCall = APIclient.apIinterface().updateUser(beforeUpdateEmail, beforePassword, user);
+        updateCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()) {
+                    CurrentSession.CurrentUser = response.body();
+                    Toast.makeText(ct,"Updated Successfuly!",Toast.LENGTH_LONG).show();
+                    Intent goMainNavAct = new Intent(ct, MainNavActivity.class);
+                    goMainNavAct.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                    ct.startActivity(goMainNavAct);
+
+                }else{
+                    Log.d("updateNet", "unsuc " + response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("updateNet", "failnet " + t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
 
 }

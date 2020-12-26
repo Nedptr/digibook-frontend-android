@@ -20,10 +20,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.digibook.LoginActivity;
+import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.R;
+import com.example.digibook.SettingsActivity;
 import com.example.digibook.utilities.CurrentSession;
 import com.example.digibook.utilities.RealPathUtils;
 
@@ -41,6 +45,8 @@ public class ProfileFragment extends Fragment {
     ImageView image;
     Button upload;
     Uri imageurl;
+    Button settings;
+    TextView name,email;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,10 +97,29 @@ public class ProfileFragment extends Fragment {
         View viewroot = inflater.inflate(R.layout.fragment_profile, container, false);
         image = viewroot.findViewById(R.id.profile_image);
         upload = viewroot.findViewById(R.id.profile_upload_image);
-        Log.d("testtt", APIclient.base_url + CurrentSession.CurrentUser.getPicurl().toString());
-        Glide.with(getContext())
-                .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
-                .into(image);
+
+        name = viewroot.findViewById(R.id.profilename);
+        email = viewroot.findViewById(R.id.profileemail);
+        settings = viewroot.findViewById(R.id.profilesettings);
+
+        name.setText(CurrentSession.CurrentUser.getName());
+        email.setText(CurrentSession.CurrentUser.getEmail());
+        Log.d("lol", CurrentSession.CurrentUser.getEmail() + " " + CurrentSession.CurrentUser.getName());
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("settingsNet", CurrentSession.CurrentUser.getPassword().toString());
+                Intent goMainNavAct = new Intent(getContext(), SettingsActivity.class);
+                startActivity(goMainNavAct);
+            }
+        });
+
+        //image code
+        //Log.d("testtt", APIclient.base_url + CurrentSession.CurrentUser.getPicurl().toString());
+//        Glide.with(getContext())
+////                .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
+////                .into(image);
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override

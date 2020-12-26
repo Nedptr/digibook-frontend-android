@@ -95,4 +95,7 @@ public class User {
     public void setPicurl(String picurl) {
         this.picurl = picurl;
     }
+
+
+
 }
