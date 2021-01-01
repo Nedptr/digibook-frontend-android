@@ -1,6 +1,7 @@
 package com.example.digibook.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.digibook.R;
 import com.example.digibook.SearchResultsRVAdapter;
+import com.example.digibook.SettingsActivity;
+import com.example.digibook.home_viewcomments;
 import com.example.digibook.models.Post;
 import com.example.digibook.utilities.CurrentSession;
 
@@ -76,6 +79,17 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
                 //notifyDataSetChanged();
             }
         });
+
+        // handling view comments TextView
+        holder.viewComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goCommentActivity = new Intent(holder.itemView.getContext(), home_viewcomments.class);
+                goCommentActivity.putExtra("postID", postData.get(position).getDate());
+                holder.itemView.getContext().startActivity(goCommentActivity);
+            }
+        });
+
     }
 
 
@@ -90,6 +104,8 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
         TextView text, likesCount;
         ImageView pic;
         Button likeButton;
+        TextView viewComments;
+        Context ct;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +114,8 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             likesCount = itemView.findViewById(R.id.homeLikesCount);
             pic = itemView.findViewById(R.id.homePostUserPicture);
             likeButton = itemView.findViewById(R.id.homeLikeButton);
+            viewComments = itemView.findViewById(R.id.homeComment);
+
 
         }
     }

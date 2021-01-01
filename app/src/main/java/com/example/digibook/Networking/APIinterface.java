@@ -3,6 +3,8 @@ package com.example.digibook.Networking;
 import android.app.DownloadManager;
 
 
+import com.example.digibook.models.Comment;
+import com.example.digibook.models.Notification;
 import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
@@ -65,4 +67,14 @@ public interface APIinterface {
 
     @POST("api/user/profile/update/{email}/{password}")
     Call<User> updateUser(@Path("email") String email, @Path("password") String password, @Body User user);
+
+    @GET("api/user/home/allpostcomments/{date}")
+    Call<List<Comment>> getallpostcomments(@Path("date") String date);
+
+    @POST("api/user/home/addcomment")
+    Call<Comment> addComment(@Body Comment comment);
+
+    @GET("api/user/notifications/getallnotifications/{currentemail}")
+    Call<List<Notification>> getallnotifications(@Path("currentemail") String currentemail);
+
 }

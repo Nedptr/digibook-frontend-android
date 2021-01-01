@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.digibook.CommentsRVAdapter;
 import com.example.digibook.LoginActivity;
 import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
@@ -27,6 +28,8 @@ import com.example.digibook.SettingsActivity;
 import com.example.digibook.fragments.HomeRVAdapter;
 import com.example.digibook.fragments.ProfileFragment;
 import com.example.digibook.fragments.SearchFragment;
+import com.example.digibook.models.Comment;
+import com.example.digibook.models.Notification;
 import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
@@ -215,6 +218,52 @@ public class CurrentSession {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d("updateNet", "failnet " + t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public static void addComment(String text, String postID, CommentsRVAdapter myAdapter, RecyclerView recyclerView, EditText textview){
+        Comment newcomment = new Comment();
+        newcomment.setEmail(CurrentSession.CurrentUser.getEmail());
+        newcomment.setName(CurrentSession.CurrentUser.getName());
+        newcomment.setPicurl(CurrentSession.CurrentUser.getPicurl());
+        newcomment.setText(text);
+        newcomment.setDate(postID);
+
+        Call<Comment> addcommentcall = APIclient.apIinterface().addComment(newcomment);
+        addcommentcall.enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                Log.d("debuging", "lastpost before: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                CommentsRVAdapter.commentData.add(response.body());
+                myAdapter.notifyDataSetChanged();
+
+                recyclerView.scrollToPosition(myAdapter.getItemCount() - 1);
+                textview.getText().clear();
+            }
+
+            @Override
+            public void onFailure(Call<Comment> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public static void getnotifications(){
+        Call<List<Notification>> getnotifcall = APIclient.apIinterface().getallnotifications(CurrentSession.CurrentUser.getEmail());
+        getnotifcall.enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+                if(response.isSuccessful()){
+                    Log.d("notif", "succ");
+                } else {
+                    Log.d("notif", "unsucc notif");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
                 t.printStackTrace();
             }
         });

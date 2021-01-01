@@ -3,12 +3,24 @@ package com.example.digibook.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.digibook.Networking.APIclient;
 import com.example.digibook.R;
+import com.example.digibook.models.Notification;
+import com.example.digibook.utilities.CurrentSession;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +28,9 @@ import com.example.digibook.R;
  * create an instance of this fragment.
  */
 public class NotificationFragment extends Fragment {
+
+    RecyclerView recyclerView;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +76,33 @@ public class NotificationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false);
+        View viewroot = inflater.inflate(R.layout.fragment_notification, container, false);
+        recyclerView = viewroot.findViewById(R.id.notificationRV);
+
+        // get notifications call
+        Call<List<Notification>> getnotifcall = APIclient.apIinterface().getallnotifications(CurrentSession.CurrentUser.getEmail());
+        getnotifcall.enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+                if(response.isSuccessful()){
+                    Log.d("notif", "succ");
+                    NotificationsRVAdapter myAdapter = new NotificationsRVAdapter(getContext(), response.body());
+                    recyclerView.setAdapter(myAdapter);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, true);
+                    layoutManager.setStackFromEnd(true);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.scrollToPosition(0);
+                } else {
+                    Log.d("notif", "unsucc notif");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+        return viewroot;
     }
 }
