@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchResultsExtend">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/extendConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="328dp"
+        android:layout_below="@id/extendToolbar">
+
+        <TextView
+            android:id="@+id/extendbook_fav_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="168dp"
+            android:layout_marginEnd="78dp"
+            android:layout_marginBottom="13dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/extendbook_fav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/extendbook_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:text="addFav"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/extendbook_upvote" />
+
+        <TextView
+            android:id="@+id/extendbook_upvote_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="168dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/extendbook_upvote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginEnd="152dp"
+            android:text="UpVote"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/extendbook_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/extendbook_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="48dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
+            app:layout_constraintTop_toBottomOf="@+id/extendbook_author" />
+
+        <ImageView
+            android:id="@+id/extendbook_image"
+            android:layout_width="159dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/extendToolbar"
+        android:background="?android:attr/windowBackground" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/extendRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/extendCommentBottom"
+        android:layout_below="@id/extendConstraintLayout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/extendCommentBottom"
+        android:background="#fff"
+        android:padding="4dp"
+        android:layout_alignParentBottom="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/extendCommentCurrentProfileImage"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/extendCommentCurrentProfileImage"
+            android:hint="Add a comment..."
+            android:id="@+id/extendAddCommentText"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:layout_toLeftOf="@+id/extendAddComment"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/extendAddComment"
+            android:text="POST"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimary"/>
+
+    </RelativeLayout>
+</RelativeLayout>

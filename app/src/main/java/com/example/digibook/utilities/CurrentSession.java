@@ -24,10 +24,13 @@ import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.RegisterActivity;
 import com.example.digibook.SearchResults;
+import com.example.digibook.SearchResultsExtendRVAdapter;
 import com.example.digibook.SettingsActivity;
 import com.example.digibook.fragments.HomeRVAdapter;
 import com.example.digibook.fragments.ProfileFragment;
 import com.example.digibook.fragments.SearchFragment;
+import com.example.digibook.models.Book;
+import com.example.digibook.models.BookComment;
 import com.example.digibook.models.Comment;
 import com.example.digibook.models.Notification;
 import com.example.digibook.models.Post;
@@ -109,6 +112,7 @@ public class CurrentSession {
         Post post = new Post();
         post.setEmail(CurrentSession.CurrentUser.getEmail());
         post.setName(CurrentSession.CurrentUser.getName());
+        post.setPicurl(CurrentSession.CurrentUser.getPicurl());
         post.setText(text);
 
         Call<Post> addPostCall = APIclient.apIinterface().addPost(post);
@@ -150,9 +154,13 @@ public class CurrentSession {
                     if (response.body().getStatus().compareTo("Like")==0) {
                         likebutton.setBackgroundColor(Color.BLUE);
                         likecount.setTextColor(Color.BLUE);
+                        CurrentSession.addnotification(owneremail, "Liked", postid);
+
                     }else{
                         likebutton.setBackgroundColor(Color.GRAY);
                         likecount.setTextColor(Color.GRAY);
+                        CurrentSession.addnotification(owneremail, "Disliked", postid);
+
                     }
                     likecount.setText(response.body().getCount());
                     List<String> newList;
@@ -183,6 +191,8 @@ public class CurrentSession {
             public void onResponse(Call<String> call, Response<String> response) {
                 if(response.isSuccessful()){
                     Log.d("uploadImageNet", response.body());
+                    CurrentSession.CurrentUser.setPicurl(response.body());
+                    Log.d("pictest", response.body().toString());
 /*                    Intent data = new Intent( ct, SearchResults.class);
                     data.putExtra("data", response.body());
                     ct.startActivity(data);*/
@@ -250,21 +260,146 @@ public class CurrentSession {
         });
     }
 
-    public static void getnotifications(){
-        Call<List<Notification>> getnotifcall = APIclient.apIinterface().getallnotifications(CurrentSession.CurrentUser.getEmail());
-        getnotifcall.enqueue(new Callback<List<Notification>>() {
+
+    public static void addnotification(String email, String action, String notifid){
+        Notification newnotif = new Notification();
+        newnotif.setCurrentemail(CurrentSession.CurrentUser.getEmail());
+        newnotif.setName(CurrentSession.CurrentUser.getName());
+        newnotif.setPicurl(CurrentSession.CurrentUser.getPicurl());
+        newnotif.setEmail(email); // post's owner email
+        newnotif.setAction(action);
+        newnotif.setNotificationid(notifid);
+
+
+        Call<Notification> addnotifcall = APIclient.apIinterface().addnotification(newnotif);
+        addnotifcall.enqueue(new Callback<Notification>() {
             @Override
-            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+            public void onResponse(Call<Notification> call, Response<Notification> response) {
                 if(response.isSuccessful()){
-                    Log.d("notif", "succ");
+                    Log.d("addNotif", "succ add notif");
+
+
                 } else {
-                    Log.d("notif", "unsucc notif");
+                    Log.d("addNotif", "unsucc add notif");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
+            public void onFailure(Call<Notification> call, Throwable t) {
                 t.printStackTrace();
+            }
+        });
+    }
+
+    public static void addbookComment(String text, String bookid, SearchResultsExtendRVAdapter myAdapter, RecyclerView recyclerView, EditText textview){
+        BookComment newcomment = new BookComment();
+        newcomment.setBookid(bookid);
+        newcomment.setEmail(CurrentSession.CurrentUser.getEmail());
+        newcomment.setName(CurrentSession.CurrentUser.getName());
+        newcomment.setPicurl(CurrentSession.CurrentUser.getPicurl());
+        newcomment.setText(text);
+
+        Call<BookComment> addcommentcall = APIclient.apIinterface().addbookcomment(newcomment);
+        addcommentcall.enqueue(new Callback<BookComment>() {
+            @Override
+            public void onResponse(Call<BookComment> call, Response<BookComment> response) {
+                //Log.d("debuging", "lastpost before: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                SearchResultsExtendRVAdapter.bookcommentsData.add(response.body());
+                myAdapter.notifyDataSetChanged();
+
+                recyclerView.scrollToPosition(myAdapter.getItemCount() - 1);
+                textview.getText().clear();
+            }
+
+            @Override
+            public void onFailure(Call<BookComment> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+/*    public static void extendbook(Book book){
+        Call<Book> extendbookcall = APIclient.apIinterface().addbook(book);
+        extendbookcall.enqueue(new Callback<Book>() {
+            @Override
+            public void onResponse(Call<Book> call, Response<Book> response) {
+                if(response.isSuccessful()){
+                    Log.d("extendtest", "extendaddbook succ");
+
+                }else{
+                    Log.d("extendtest", "extendaddbook unsucc");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Book> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }*/
+
+    public static void addupvote(String useremail, String bookid, Button likebutton, TextView likecount){
+        Call<likepostResponse> upvotecall = APIclient.apIinterface().addupvote(bookid,useremail);
+        upvotecall.enqueue(new Callback<likepostResponse>() {
+            @Override
+            public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus().compareTo("Like")==0) {
+                        likebutton.setBackgroundColor(Color.BLUE);
+                        likecount.setTextColor(Color.BLUE);
+                        //CurrentSession.addnotification(owneremail, "Liked", bookid);
+
+                    }else{
+                        likebutton.setBackgroundColor(Color.GRAY);
+                        likecount.setTextColor(Color.GRAY);
+                        //CurrentSession.addnotification(owneremail, "Disliked", bookid);
+
+                    }
+                    likecount.setText(response.body().getCount());
+                    //List<String> newList;
+                    //newList = response.body().getNewlikeslist();
+                    //HomeRVAdapter.postData.get(position).setLikesList(newList);
+
+                } else {
+                    Log.d("homeNet", "unsucc likepost:  " + response.errorBody().toString());
+                }
+            }
+            @Override
+            public void onFailure(Call<likepostResponse> call, Throwable t) {
+                Log.d("homeNet",t.toString());
+            }
+        });
+    }
+
+    public static void addfav(String useremail, String bookid, Button likebutton, TextView likecount){
+        Call<likepostResponse> addfavcall = APIclient.apIinterface().addbookfav(bookid,useremail);
+        addfavcall.enqueue(new Callback<likepostResponse>() {
+            @Override
+            public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus().compareTo("Like")==0) {
+                        likebutton.setBackgroundColor(Color.BLUE);
+                        likecount.setTextColor(Color.BLUE);
+                        //CurrentSession.addnotification(owneremail, "Liked", bookid);
+
+                    }else{
+                        likebutton.setBackgroundColor(Color.GRAY);
+                        likecount.setTextColor(Color.GRAY);
+                        //CurrentSession.addnotification(owneremail, "Disliked", bookid);
+
+                    }
+                    likecount.setText(response.body().getCount());
+                    //List<String> newList;
+                    //newList = response.body().getNewlikeslist();
+                    //HomeRVAdapter.postData.get(position).setLikesList(newList);
+
+                } else {
+                    Log.d("homeNet", "unsucc likepost:  " + response.errorBody().toString());
+                }
+            }
+            @Override
+            public void onFailure(Call<likepostResponse> call, Throwable t) {
+                Log.d("homeNet",t.toString());
             }
         });
     }

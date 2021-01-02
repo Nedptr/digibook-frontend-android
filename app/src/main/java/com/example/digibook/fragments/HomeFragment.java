@@ -94,9 +94,6 @@ public class HomeFragment extends Fragment {
         submitButton = viewroot.findViewById(R.id.homeAddPost);
 
 
-
-        Glide.with(getContext()).load(R.drawable.slide).into(profilePic);
-
         //CurrentSession.getAllPosts();
         Call<List<Post>> getPostsCall = APIclient.apIinterface().getallposts();
         getPostsCall.enqueue(new Callback<List<Post>>() {
@@ -104,12 +101,14 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if(response.isSuccessful()) {
                     HomeRVAdapter myAdapter = new HomeRVAdapter(getContext(), response.body());
+                    Glide.with(getContext()).load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl()).into(profilePic);
                     recyclerView.setAdapter(myAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, true);
                     layoutManager.setStackFromEnd(true);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.scrollToPosition(0);
                 }else{
+                    Glide.with(getContext()).load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl()).into(profilePic);
                     Log.d("homeNet", "unsucc");
                 }
             }
@@ -128,6 +127,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
 
         // Inflate the layout for this fragment
         return viewroot;

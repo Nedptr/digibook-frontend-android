@@ -12,53 +12,52 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.digibook.Networking.APIclient;
+import com.example.digibook.models.BookComment;
 import com.example.digibook.models.Comment;
 
 import java.util.List;
 
-public class CommentsRVAdapter extends RecyclerView.Adapter<CommentsRVAdapter.MyViewHolder> {
+public class SearchResultsExtendRVAdapter extends RecyclerView.Adapter<SearchResultsExtendRVAdapter.MyViewHolder> {
 
-    // declate data and pass it in the constructor
     Context context;
-    public static List<Comment> commentData;
+    public static List<BookComment> bookcommentsData;
 
-    public CommentsRVAdapter(Context ct, List<Comment> Data){
+    public SearchResultsExtendRVAdapter(Context ct, List<BookComment> data){
         context = ct;
-        commentData = Data;
-    };
+        bookcommentsData= data;
+    }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.comment_rv_item, parent, false);
-        return new CommentsRVAdapter.MyViewHolder(view);
-    }
+        return new SearchResultsExtendRVAdapter.MyViewHolder(view);    }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.name.setText(commentData.get(position).getName());
-        holder.text.setText(commentData.get(position).getText());
-        Glide.with(context).load(APIclient.base_url + commentData.get(position).getPicurl()).into(holder.image);
+        holder.name.setText(bookcommentsData.get(position).getName());
+        holder.text.setText(bookcommentsData.get(position).getText());
+        Glide.with(context).load(APIclient.base_url + bookcommentsData.get(position).getPicurl()).into(holder.pic);
 
     }
 
     @Override
     public int getItemCount() {
-        return commentData.size();
+        return bookcommentsData.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView name,text;
-        ImageView image;
+        ImageView pic;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             name = itemView.findViewById(R.id.commentName);
             text = itemView.findViewById(R.id.commentText);
-            image = itemView.findViewById(R.id.commentImage);
+            pic = itemView.findViewById(R.id.commentImage);
         }
     }
+
 }

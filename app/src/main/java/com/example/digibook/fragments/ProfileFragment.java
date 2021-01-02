@@ -115,11 +115,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        //image code
-        //Log.d("testtt", APIclient.base_url + CurrentSession.CurrentUser.getPicurl().toString());
-//        Glide.with(getContext())
-////                .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
-////                .into(image);
+        //image code : thama // zeyda I guess ba3ed base url
+        Log.d("testtt", APIclient.base_url + CurrentSession.CurrentUser.getPicurl().toString());
+        Glide.with(getContext())
+                .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
+                .into(image);
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override

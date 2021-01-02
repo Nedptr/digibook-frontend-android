@@ -10,8 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.digibook.Networking.APIclient;
 import com.example.digibook.R;
 import com.example.digibook.models.Notification;
+import com.example.digibook.utilities.CurrentSession;
 
 import org.w3c.dom.Text;
 
@@ -39,7 +42,7 @@ public class NotificationsRVAdapter extends RecyclerView.Adapter<NotificationsRV
         holder.action.setText(notifData.get(position).getAction());
         holder.name.setText(notifData.get(position).getName());
         holder.post.setText(notifData.get(position).getNotificationid());
-        // set image however the fk u like holder.image.setImageBitmap();.......
+        Glide.with(context).load(APIclient.base_url + notifData.get(position).getPicurl()).into(holder.image);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SearchResults extends AppCompatActivity {
 
 
         // create adapter and pass data into
-        SearchResultsRVAdapter myAdapter = new SearchResultsRVAdapter(this, data.getItems());
+        SearchResultsRVAdapter myAdapter = new SearchResultsRVAdapter(this, data);
         ResRecyclerView.setAdapter(myAdapter);
         ResRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

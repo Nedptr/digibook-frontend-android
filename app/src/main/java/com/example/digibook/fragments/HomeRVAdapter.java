@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.digibook.Networking.APIclient;
 import com.example.digibook.R;
 import com.example.digibook.SearchResultsRVAdapter;
 import com.example.digibook.SettingsActivity;
@@ -48,6 +49,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Log.d("position", String.valueOf(position));
         //filling items(post)
+        Glide.with(context).load(APIclient.base_url + postData.get(position).getPicurl()).into(holder.pic);
         holder.text.setText(postData.get(position).getText());
         if(postData.get(position).getLikesList()!=null) {
             String n = String.valueOf(postData.get(position).getLikesList().size());
@@ -65,7 +67,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             holder.likesCount.setText("0");
         }
 
-        Glide.with(context).load(R.drawable.slide).into(holder.pic);
+        //Glide.with(context).load(R.drawable.slide).into(holder.pic);
 
         // wrong if(holder.likesCount.getText().toString().compareTo("1")==0)
 
@@ -77,6 +79,9 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
                 Log.d("debuging", "this is item position with getadappos: " + String.valueOf(holder.getAdapterPosition()));
                 CurrentSession.likePost(CurrentSession.CurrentUser.getEmail(), postData.get(holder.getAdapterPosition()).getEmail(), postData.get(holder.getAdapterPosition()).getDate(), holder.likeButton, holder.likesCount, holder.getAdapterPosition());
                 //notifyDataSetChanged();
+
+                // add notification
+                // CurrentSession.addnotification(postData.get(position).getEmail(), "liked", postData.get(position).getDate()); >>>>> CALLED this inside of CurrentSession.likePost for like/disliked actions
             }
         });
 
@@ -86,6 +91,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             public void onClick(View v) {
                 Intent goCommentActivity = new Intent(holder.itemView.getContext(), home_viewcomments.class);
                 goCommentActivity.putExtra("postID", postData.get(position).getDate());
+                goCommentActivity.putExtra("postEmail", postData.get(position).getEmail());
                 holder.itemView.getContext().startActivity(goCommentActivity);
             }
         });

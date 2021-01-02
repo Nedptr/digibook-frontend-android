@@ -1,25 +1,20 @@
 package com.example.digibook.Networking;
 
-import android.app.DownloadManager;
 
-
+import com.example.digibook.models.Book;
+import com.example.digibook.models.BookComment;
 import com.example.digibook.models.Comment;
 import com.example.digibook.models.Notification;
 import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
 import com.example.digibook.models.likepostResponse;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -74,7 +69,30 @@ public interface APIinterface {
     @POST("api/user/home/addcomment")
     Call<Comment> addComment(@Body Comment comment);
 
-    @GET("api/user/notifications/getallnotifications/{currentemail}")
-    Call<List<Notification>> getallnotifications(@Path("currentemail") String currentemail);
+    @GET("api/user/notifications/getallnotifications/{email}")
+    Call<List<Notification>> getallnotifications(@Path("email") String email);
+
+    @POST("api/user/notifications/addnotification")
+    Call<Notification> addnotification(@Body Notification notification);
+
+    // ez
+
+    @POST("booksearch/extendedresults")
+    Call<Book> addbook(@Body Book book);
+
+    @POST("booksearch/extendedupvote/{bookid}/{currentUserEmail}")
+    Call<likepostResponse> addupvote(@Path("bookid") String bookid, @Path("currentUserEmail") String currentUserEmail);
+
+    @GET("booksearch/extendedallcomments/{bookid}")
+    Call<List<BookComment>> getbookcomments(@Path("bookid") String bookid);
+
+    @POST("booksearch/extendedaddcomment")
+    Call<BookComment> addbookcomment(@Body BookComment bookcomment);
+
+    @POST("booksearch/extendedaddfav/{bookid}/{currentUserEmail}")
+    Call<likepostResponse> addbookfav(@Path("bookid") String bookid, @Path("currentUserEmail") String currentUserEmail);
+
+    @GET("api/user/profile/allfavbooks/{email}")
+    Call<Book> getfavbooks(@Path("email") String email);
 
 }

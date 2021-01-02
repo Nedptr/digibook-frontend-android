@@ -22,17 +22,20 @@
                 android:id="@+id/notifpost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="17dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/notifAction"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/notifImage"
+                app:layout_constraintTop_toBottomOf="@+id/notifName" />
 
             <TextView
                 android:id="@+id/notifAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:text="TextView"
+                android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/notifName"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,13 +46,14 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="32dp"
                 android:text="TextView"
+                android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/notifImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/notifImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="128dp"
+                android:layout_height="123dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

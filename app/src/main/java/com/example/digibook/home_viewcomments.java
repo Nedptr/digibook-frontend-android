@@ -81,6 +81,7 @@ public class home_viewcomments extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CurrentSession.addComment(textComment.getText().toString(), getIntent().getStringExtra("postID"), (CommentsRVAdapter) recyclerView.getAdapter(), recyclerView, textComment);
+                CurrentSession.addnotification(getIntent().getStringExtra("postEmail"), "Commented", getIntent().getStringExtra("postID"));
             }
         });
     }

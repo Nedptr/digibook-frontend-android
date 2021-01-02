@@ -10,15 +10,15 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class APIclient {
 
     // Define base url
-    public static String base_url = "http://192.168.1.5:3000/";
+    public static String base_url = "http://192.168.42.249:3000/";
 
     //Retrofit instance
     public static Retrofit getClient(){
 
         //here u set timeouts and okhttp settings
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(10, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
