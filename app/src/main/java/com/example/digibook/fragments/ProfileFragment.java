@@ -12,6 +12,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -30,6 +34,7 @@ import com.example.digibook.R;
 import com.example.digibook.SettingsActivity;
 import com.example.digibook.utilities.CurrentSession;
 import com.example.digibook.utilities.RealPathUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 
@@ -94,7 +99,15 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         View viewroot = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        BottomNavigationView mainBotNav = viewroot.findViewById(R.id.profile_navig);
+        View host = viewroot.findViewById(R.id.profile_host);
+        NavController navController = Navigation.findNavController(host);
+        NavigationUI.setupWithNavController(mainBotNav, navController);
+
         image = viewroot.findViewById(R.id.profile_image);
         upload = viewroot.findViewById(R.id.profile_upload_image);
 

@@ -93,6 +93,10 @@ public interface APIinterface {
     Call<likepostResponse> addbookfav(@Path("bookid") String bookid, @Path("currentUserEmail") String currentUserEmail);
 
     @GET("api/user/profile/allfavbooks/{email}")
-    Call<Book> getfavbooks(@Path("email") String email);
+    Call<List<Book>> getfavbooks(@Path("email") String email);
+
+    @GET("api/user/profile/allmyposts/{email}")
+    Call<List<Post>> getmyposts(@Path("email") String email);
+
 
 }

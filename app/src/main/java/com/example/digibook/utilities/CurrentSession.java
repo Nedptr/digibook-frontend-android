@@ -180,6 +180,7 @@ public class CurrentSession {
 
 
     //upload profile picture
+    // using the code directly in settings
     public static void uploadProfilePicture(String imageurl, Context ct){
         File image = new File(imageurl);
         RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
