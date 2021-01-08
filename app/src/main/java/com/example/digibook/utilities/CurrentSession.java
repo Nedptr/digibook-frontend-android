@@ -4,9 +4,11 @@ import android.accessibilityservice.AccessibilityService;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.inputmethodservice.KeyboardView;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.os.TokenWatcher;
 import android.util.Log;
@@ -38,7 +40,9 @@ import com.example.digibook.models.User;
 import com.example.digibook.models.booksearchmodels.BookSearch;
 import com.example.digibook.models.likepostResponse;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -403,6 +407,30 @@ public class CurrentSession {
                 Log.d("homeNet",t.toString());
             }
         });
+    }
+
+    public static File bitmapToFile(Context context, Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
+        //create a file to write bitmap data
+        File file = null;
+        try {
+            file = new File(Environment.getExternalStorageDirectory() + File.separator + fileNameToSave);
+            file.createNewFile();
+
+//Convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 , bos); // YOU can also save it in JPEG
+            byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            return file;
+        }catch (Exception e){
+            e.printStackTrace();
+            return file; // it will return null
+        }
     }
 
 }

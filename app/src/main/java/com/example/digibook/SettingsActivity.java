@@ -9,9 +9,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +28,9 @@ import com.example.digibook.utilities.CurrentSession;
 import com.example.digibook.utilities.RealPathUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView pic;
     String imageurl;
     Uri imageURi;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +124,27 @@ public class SettingsActivity extends AppCompatActivity {
                 updatedUser.setName(name.getText().toString());
                 updatedUser.setEmail(email.getText().toString());
                 updatedUser.setPassword(password.getText().toString());
-                //updatedUser.setPicurl(imageurl);
 
-                File image = new File(imageurl);
+//                File image = new File("file://" +imageURi.getHost().toString() + imageURi.getPath().toString());
+/*                File imagetest = new File(imageURi.toString());
+
+                URL pathimage = null;
+                try {
+                    pathimage = imagetest.toURL();
+                    Log.d("tourl", pathimage.toString());
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                File image = new File("file:///content:/com.android.providers.media.documents/document/image:41430");
+
+                Log.d("imagework", image.getName().toString());*/
+
+
+                File image = CurrentSession.bitmapToFile(getApplicationContext(), bitmap, CurrentSession.CurrentUser.getEmail() + ".png");
                 RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", "test" , reqbody);
-
+                MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", image.getName() , reqbody);
+                Log.d("imagework", image.getName().toString());
                 Call<String> uploadCall = APIclient.apIinterface().uploadProfilePicture(CurrentSession.CurrentUser.getEmail(), part);
                 uploadCall.enqueue(new Callback<String>() {
                     @Override
@@ -158,7 +179,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             Uri uri = data.getData();
-            Log.d("FILEPATHBRO", uri.getPathSegments().toString() + " " + uri.getPath() + " " + uri.getEncodedPath() + " " + uri.getLastPathSegment());
+
+/*            Log.d("FILEPATHBRO", uri.getPathSegments().toString() + " " + uri.getPath() + " " + uri.getEncodedPath() + " " + uri.getLastPathSegment());
             String path = null;
             if (Build.VERSION.SDK_INT < 11)
                 path = RealPathUtils.getRealPathFromURI_BelowAPI11(getApplicationContext(), uri);
@@ -170,14 +192,22 @@ public class SettingsActivity extends AppCompatActivity {
                 // SDK > 19 (Android 4.4)
             else
                 path = RealPathUtils.getRealPathFromURI_API19(getApplicationContext(), uri);
-            Log.d("FILEPATHBRO", "File Path: " + path);
+            Log.d("FILEPATHBRO", "File Path: " + path);*/
+
             // Get the file instance
 
 //            Glide.with(getContext())
 //                    .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
 //    .into(image);
-            imageurl = path;
+            //imageurl = path;
             imageURi = uri;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageURi);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Log.d("imageworks", uri.getPath() + " " + uri.getLastPathSegment() + " " + uri.getAuthority() + " " + uri .getPathSegments().toString() + " " + uri.getFragment() + " " + uri.getHost() + " " + uri.getUserInfo());
             pic.setImageURI(uri);
         }
 
