@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.digibook.Networking.APIclient;
@@ -209,6 +210,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             //Log.d("imageworks", uri.getPath() + " " + uri.getLastPathSegment() + " " + uri.getAuthority() + " " + uri .getPathSegments().toString() + " " + uri.getFragment() + " " + uri.getHost() + " " + uri.getUserInfo());
             pic.setImageURI(uri);
+        }else{
+            Toast.makeText(getApplicationContext(),"Please choose a picture!",Toast.LENGTH_SHORT).show();
+            return;
         }
 
     }

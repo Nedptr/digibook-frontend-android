@@ -20,11 +20,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.digibook.MainNavActivity;
 import com.example.digibook.R;
+import com.example.digibook.RegisterActivity;
 import com.example.digibook.utilities.CurrentSession;
 import com.example.digibook.utilities.RealPathUtils;
+
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -149,7 +153,7 @@ public class SearchFragment extends Fragment {
 
         //Log.d("FILEPATHBRO", "File uri: " + data.getData().toString());
 
-        if(requestCode == 1 && resultCode == RESULT_OK){
+/*        if(requestCode == 1 && resultCode == RESULT_OK){
             Uri uri = data.getData();
             String path = null;
             if (Build.VERSION.SDK_INT < 11)
@@ -162,9 +166,21 @@ public class SearchFragment extends Fragment {
                 // SDK > 19 (Android 4.4)
             else
                 path = RealPathUtils.getRealPathFromURI_API19(getContext(), uri);
-            Log.d("FILEPATHBRO", "File Path: " + path);
-            // Get the file instance
-            CurrentSession.uploadImageSearch(path, getContext());
+            Log.d("FILEPATHBRO", "File Path: " + path);*/
+
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            try {
+                CurrentSession.uploadImageSearch(uri, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(getContext(),"Searching.. Please Wait..",Toast.LENGTH_SHORT).show();
+
+        }else{
+            Toast.makeText(getContext(),"Please Choose a Picture!",Toast.LENGTH_SHORT).show();
+
+            return;
         }
 
 /*        if(requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK){

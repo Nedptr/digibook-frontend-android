@@ -106,7 +106,7 @@ public class HomeFragment extends Fragment {
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, true);
                     layoutManager.setStackFromEnd(true);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.scrollToPosition(0);
+                    //recyclerView.scrollToPosition(0);
                 }else{
                     Glide.with(getContext()).load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl()).into(profilePic);
                     Log.d("homeNet", "unsucc");

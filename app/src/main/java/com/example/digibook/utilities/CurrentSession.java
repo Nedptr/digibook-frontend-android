@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.os.TokenWatcher;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Adapter;
 import android.widget.Button;
@@ -43,6 +44,7 @@ import com.example.digibook.models.likepostResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -86,8 +88,9 @@ public class CurrentSession {
     }
 
     // TODO: handle erros and exeptions , for example if totalitems = 0 > NOT FOUND BOOK ...
-    public static void uploadImageSearch(String imageurl, Context ct){
-        File image = new File(imageurl);
+    public static void uploadImageSearch(Uri uri, Context ct) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(ct.getContentResolver(), uri);
+        File image = CurrentSession.bitmapToFile(ct, bitmap, "uploadedImageSearch.png");
         RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
         MultipartBody.Part part = MultipartBody.Part.createFormData("textimage", image.getName() , reqbody);
 

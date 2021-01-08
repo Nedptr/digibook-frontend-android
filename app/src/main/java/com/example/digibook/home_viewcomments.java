@@ -61,10 +61,10 @@ public class home_viewcomments extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     CommentsRVAdapter myAdapter = new CommentsRVAdapter(getApplicationContext(), response.body());
                     recyclerView.setAdapter(myAdapter);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL, true);
-                    layoutManager.setStackFromEnd(true);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL, false);
+                    //layoutManager.setStackFromEnd(true);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.scrollToPosition(0);
+                    //recyclerView.scrollToPosition(0);
                 }else{
                     Log.d("homeNet", "unsucc");
                 }

@@ -91,7 +91,7 @@ public class profile_myposts_fragment extends Fragment {
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, true);
                     layoutManager.setStackFromEnd(true);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.scrollToPosition(0);
+                    //recyclerView.scrollToPosition(0);
                 } else {
                     Log.d("notif", "unsucc notif");
                 }
