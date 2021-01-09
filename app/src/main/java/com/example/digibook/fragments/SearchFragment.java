@@ -175,7 +175,7 @@ public class SearchFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(getContext(),"Searching.. Please Wait..",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Searching.. Please Wait..",Toast.LENGTH_LONG).show();
 
         }else{
             Toast.makeText(getContext(),"Please Choose a Picture!",Toast.LENGTH_SHORT).show();

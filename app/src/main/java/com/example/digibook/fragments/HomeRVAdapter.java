@@ -56,7 +56,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             holder.likesCount.setText(n);
             //maybe not hardcode it in frontend and do isPostLiked() route in server
             // like button COLORING
-            if(HomeRVAdapter.postData.get(position).getLikesList().contains(CurrentSession.CurrentUserEmail)) {
+            if(HomeRVAdapter.postData.get(position).getLikesList().contains(CurrentSession.CurrentUser.getEmail())) {
                 holder.likeButton.setBackgroundColor(Color.BLUE);
                 holder.likesCount.setTextColor(Color.BLUE);
             }else{

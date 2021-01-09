@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.digibook.Networking.APIclient;
+import com.example.digibook.fragments.HomeRVAdapter;
+import com.example.digibook.models.Post;
 import com.example.digibook.models.User;
 import com.example.digibook.utilities.CurrentSession;
 import com.example.digibook.utilities.RealPathUtils;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -61,6 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         password = findViewById(R.id.settingsPassword);
         update= findViewById(R.id.settingsUpdateButton);
         pic = findViewById(R.id.settingsImage);
+
 
         name.setText(CurrentSession.CurrentUser.getName());
         email.setText(CurrentSession.CurrentUser.getEmail());
@@ -141,30 +145,34 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Log.d("imagework", image.getName().toString());*/
 
+                if(imageURi != null) {
+                    File image = CurrentSession.bitmapToFile(getApplicationContext(), bitmap, CurrentSession.CurrentUser.getEmail() + ".png");
+                    RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
+                    MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", image.getName(), reqbody);
+                    Call<String> uploadCall = APIclient.apIinterface().uploadProfilePicture(CurrentSession.CurrentUser.getEmail(), part);
+                    uploadCall.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if (response.isSuccessful()) {
+                                Log.d("crashfixImageUpload", response.body().toString());
+                                CurrentSession.CurrentUser.setPicurl(response.body());
+                                updatedUser.setPicurl(response.body());
+                                CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString());
 
-                File image = CurrentSession.bitmapToFile(getApplicationContext(), bitmap, CurrentSession.CurrentUser.getEmail() + ".png");
-                RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", image.getName() , reqbody);
-                Log.d("imagework", image.getName().toString());
-                Call<String> uploadCall = APIclient.apIinterface().uploadProfilePicture(CurrentSession.CurrentUser.getEmail(), part);
-                uploadCall.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        if(response.isSuccessful()){
-                            CurrentSession.CurrentUser.setPicurl(response.body());
-                            updatedUser.setPicurl(response.body());
-                            CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString());
-
-                        }else {
-                            Log.d("uploadImageNet", "unsuc");
+                            } else {
+                                Log.d("uploadImageNet", "unsuc");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.d("uploadImageNet", t.toString());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.d("uploadImageNet", t.toString());
+                        }
+
+                    });
+                }else {
+                    CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString());
+                }
             }
         });
 

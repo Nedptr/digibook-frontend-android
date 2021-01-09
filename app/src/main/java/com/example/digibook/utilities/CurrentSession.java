@@ -1,8 +1,10 @@
 package com.example.digibook.utilities;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.digibook.CommentsRVAdapter;
@@ -222,6 +225,7 @@ public class CurrentSession {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()) {
+                    Log.d("crashfix", response.body().getPicurl().toString());
                     CurrentSession.CurrentUser = response.body();
                     Toast.makeText(ct,"Updated Successfuly!",Toast.LENGTH_LONG).show();
                     Intent goMainNavAct = new Intent(ct, MainNavActivity.class);
@@ -229,13 +233,13 @@ public class CurrentSession {
                     ct.startActivity(goMainNavAct);
 
                 }else{
-                    Log.d("updateNet", "unsuc " + response.errorBody().toString());
+                    Log.d("crashfix", "unsuc " + response.errorBody().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.d("updateNet", "failnet " + t.toString());
+                Log.d("crashfix", "failnet " + t.toString());
                 t.printStackTrace();
             }
         });
@@ -436,4 +440,31 @@ public class CurrentSession {
         }
     }
 
+    // image options
+    public static void selectImage(Context context, Activity act) {
+        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose your profile picture");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo")) {
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    act.startActivityForResult(takePicture, 0);
+
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    act.startActivityForResult(pickPhoto , 1);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
 }
