@@ -108,7 +108,7 @@ public class SearchResultsRVAdapter extends RecyclerView.Adapter<SearchResultsRV
 
     @Override
     public int getItemCount() {
-        return bookdata.size();
+        return rawdata.getTotalItems();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

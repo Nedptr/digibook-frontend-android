@@ -7,9 +7,13 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,7 +91,6 @@ public class SettingsActivity extends AppCompatActivity {
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("testtt", APIclient.base_url + CurrentSession.CurrentUser.getPicurl().toString());
 
                 // PERMISSION
                 if(checkPermissionForReadExtertalStorage() == false) {
@@ -98,17 +101,30 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
 
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
+                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                builder.setTitle("Choose your profile picture");
 
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                builder.setItems(options, new DialogInterface.OnClickListener() {
 
-                startActivityForResult(chooserIntent, 1);
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
 
+                        if (options[item].equals("Take Photo")) {
+                            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+
+                        } else if (options[item].equals("Choose from Gallery")) {
+                            Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(pickPhoto , 1);
+
+                        } else if (options[item].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -145,7 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Log.d("imagework", image.getName().toString());*/
 
-                if(imageURi != null) {
+                if(bitmap != null) {
                     File image = CurrentSession.bitmapToFile(getApplicationContext(), bitmap, CurrentSession.CurrentUser.getEmail() + ".png");
                     RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
                     MultipartBody.Part part = MultipartBody.Part.createFormData("profilepicture", image.getName(), reqbody);
@@ -183,46 +199,52 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
 
-        if(requestCode == 1 && resultCode == RESULT_OK){
-            Uri uri = data.getData();
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
 
-/*            Log.d("FILEPATHBRO", uri.getPathSegments().toString() + " " + uri.getPath() + " " + uri.getEncodedPath() + " " + uri.getLastPathSegment());
-            String path = null;
-            if (Build.VERSION.SDK_INT < 11)
-                path = RealPathUtils.getRealPathFromURI_BelowAPI11(getApplicationContext(), uri);
+                        //pic.setImageBitmap(selectedImage);
+                        bitmap = selectedImage;
+                        pic.setImageBitmap(bitmap);
+                    }
 
-                // SDK >= 11 && SDK < 19
-            else if (Build.VERSION.SDK_INT < 19)
-                path = RealPathUtils.getRealPathFromURI_API11to18(getApplicationContext(), uri);
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage = data.getData();
+                        imageURi = selectedImage;
+                        pic.setImageURI(imageURi);
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageURi);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = getContentResolver().query(selectedImage,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
 
-                // SDK > 19 (Android 4.4)
-            else
-                path = RealPathUtils.getRealPathFromURI_API19(getApplicationContext(), uri);
-            Log.d("FILEPATHBRO", "File Path: " + path);*/
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                //pic.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                cursor.close();
+                            }
+                        }
 
-            // Get the file instance
-
-//            Glide.with(getContext())
-//                    .load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl())
-//    .into(image);
-            //imageurl = path;
-            imageURi = uri;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageURi);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    }
+                    break;
             }
-
-            //Log.d("imageworks", uri.getPath() + " " + uri.getLastPathSegment() + " " + uri.getAuthority() + " " + uri .getPathSegments().toString() + " " + uri.getFragment() + " " + uri.getHost() + " " + uri.getUserInfo());
-            pic.setImageURI(uri);
-        }else{
-            Toast.makeText(getApplicationContext(),"Please choose a picture!",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(),"Please Choose a Picture!",Toast.LENGTH_SHORT).show();
             return;
         }
-
     }
 
     public boolean checkPermissionForReadExtertalStorage() {

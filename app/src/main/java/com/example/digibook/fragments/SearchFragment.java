@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.example.digibook.utilities.RealPathUtils;
 
 import java.io.IOException;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -132,14 +135,11 @@ public class SearchFragment extends Fragment {
                     }
                 }
 
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                values.put(MediaStore.Images.Media.DESCRIPTION,"From the Cam");
-                image_uri = viewroot.getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
                 // Cam intent
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
-                startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
+                startActivityForResult(cameraIntent, 0);
 
             }
         });
@@ -151,24 +151,7 @@ public class SearchFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //Log.d("FILEPATHBRO", "File uri: " + data.getData().toString());
-
-/*        if(requestCode == 1 && resultCode == RESULT_OK){
-            Uri uri = data.getData();
-            String path = null;
-            if (Build.VERSION.SDK_INT < 11)
-                path = RealPathUtils.getRealPathFromURI_BelowAPI11(getContext(), uri);
-
-                // SDK >= 11 && SDK < 19
-            else if (Build.VERSION.SDK_INT < 19)
-                path = RealPathUtils.getRealPathFromURI_API11to18(getContext(), uri);
-
-                // SDK > 19 (Android 4.4)
-            else
-                path = RealPathUtils.getRealPathFromURI_API19(getContext(), uri);
-            Log.d("FILEPATHBRO", "File Path: " + path);*/
-
-        if(requestCode == 1 && resultCode == RESULT_OK) {
+/*        if(requestCode == 1 && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             try {
                 CurrentSession.uploadImageSearch(uri, getContext());
@@ -181,26 +164,56 @@ public class SearchFragment extends Fragment {
             Toast.makeText(getContext(),"Please Choose a Picture!",Toast.LENGTH_SHORT).show();
 
             return;
+        }*/
+
+//         Bitmap bitmap = MediaStore.Images.Media.getBitmap(ct.getContentResolver(), uri);
+
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                        //Log.d("hello", data.getExtras().get("image_uri").toString());
+                        try {
+                            CurrentSession.uploadImageSearch(selectedImage, getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage = data.getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
+                            CurrentSession.uploadImageSearch(bitmap, getContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = getContext().getContentResolver().query(selectedImage,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                //pic.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+        } else {
+            Toast.makeText(getContext(),"Please Choose a Picture!",Toast.LENGTH_SHORT).show();
+            return;
         }
 
-/*        if(requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK){
-            Uri uri = image_uri;
-            String path = null;
-            if (Build.VERSION.SDK_INT < 11)
-                path = RealPathUtils.getRealPathFromURI_BelowAPI11(getContext(), uri);
-
-                // SDK >= 11 && SDK < 19
-            else if (Build.VERSION.SDK_INT < 19)
-                path = RealPathUtils.getRealPathFromURI_API11to18(getContext(), uri);
-
-                // SDK > 19 (Android 4.4)
-            else
-                path = RealPathUtils.getRealPathFromURI_API19(getContext(), uri);
-            Log.d("FILEPATHBRO", "File Path: " + path);
-            // Get the file instance
-            CurrentSession.uploadImageSearch(path, getContext());
-        }*/
-                //  content://com.android.providers.media.documents/document/image%3A36754
     }
 
     public boolean checkPermissionForReadExtertalStorage() {

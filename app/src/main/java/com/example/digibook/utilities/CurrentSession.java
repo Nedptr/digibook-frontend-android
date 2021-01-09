@@ -91,8 +91,7 @@ public class CurrentSession {
     }
 
     // TODO: handle erros and exeptions , for example if totalitems = 0 > NOT FOUND BOOK ...
-    public static void uploadImageSearch(Uri uri, Context ct) throws IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(ct.getContentResolver(), uri);
+    public static void uploadImageSearch(Bitmap bitmap, Context ct) throws IOException {
         File image = CurrentSession.bitmapToFile(ct, bitmap, "uploadedImageSearch.png");
         RequestBody reqbody = RequestBody.create(MediaType.parse("multipart/form-data"),image);
         MultipartBody.Part part = MultipartBody.Part.createFormData("textimage", image.getName() , reqbody);
@@ -441,6 +440,7 @@ public class CurrentSession {
     }
 
     // image options
+    // not usingthis , using the code directly in settingsAct and SearchFragment with mods
     public static void selectImage(Context context, Activity act) {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
