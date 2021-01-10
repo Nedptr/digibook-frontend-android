@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.digibook.Networking.APIclient;
 import com.example.digibook.fragments.HomeRVAdapter;
@@ -80,8 +81,12 @@ public class home_viewcomments extends AppCompatActivity {
         addcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentSession.addComment(textComment.getText().toString(), getIntent().getStringExtra("postID"), (CommentsRVAdapter) recyclerView.getAdapter(), recyclerView, textComment);
-                CurrentSession.addnotification(getIntent().getStringExtra("postEmail"), "Commented", getIntent().getStringExtra("postID"));
+                if(textComment.getText() != null && textComment.getText().toString().length() != 0) {
+                    CurrentSession.addComment(textComment.getText().toString(), getIntent().getStringExtra("postID"), (CommentsRVAdapter) recyclerView.getAdapter(), recyclerView, textComment);
+                    CurrentSession.addnotification(getIntent().getStringExtra("postEmail"), "Commented", getIntent().getStringExtra("postID"));
+                }else{
+                    Toast.makeText(getApplicationContext(),"You must write a comment!",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

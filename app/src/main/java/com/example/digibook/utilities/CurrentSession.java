@@ -218,7 +218,7 @@ public class CurrentSession {
         });
     }
 
-    public static void updateUser(User user, Context ct, String beforeUpdateEmail, String beforePassword){
+    public static void updateUser(User user, Context ct, String beforeUpdateEmail, String beforePassword, TextView error){
         Call<User> updateCall = APIclient.apIinterface().updateUser(beforeUpdateEmail, beforePassword, user);
         updateCall.enqueue(new Callback<User>() {
             @Override
@@ -233,6 +233,11 @@ public class CurrentSession {
 
                 }else{
                     Log.d("crashfix", "unsuc " + response.errorBody().toString());
+                    try {
+                        error.setText(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

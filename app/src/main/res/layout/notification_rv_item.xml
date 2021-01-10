@@ -50,7 +50,7 @@
                 app:layout_constraintStart_toEndOf="@+id/notifImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/notifImage"
                 android:layout_width="128dp"
                 android:layout_height="123dp"

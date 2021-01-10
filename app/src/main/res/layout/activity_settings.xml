@@ -7,6 +7,15 @@
     android:background="@drawable/old_letter"
     tools:context=".SettingsActivity">
 
+    <TextView
+        android:id="@+id/settingsError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="186dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsUpdateButton" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settingsToolbar"
         android:layout_width="match_parent"
@@ -48,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/settingsImage"
         android:layout_width="175dp"
         android:layout_height="175dp"

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.digibook.Networking.APIclient;
@@ -123,8 +124,11 @@ public class HomeFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentSession.addPost(textPost.getText().toString(), (HomeRVAdapter) recyclerView.getAdapter(), recyclerView, textPost);
-
+                if(textPost.getText() != null && textPost.getText().toString().length() != 0) {
+                    CurrentSession.addPost(textPost.getText().toString(), (HomeRVAdapter) recyclerView.getAdapter(), recyclerView, textPost);
+                }else{
+                    Toast.makeText(getContext(),"You must write a Post!",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -57,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     String imageurl;
     Uri imageURi;
     Bitmap bitmap;
+    TextView seterror;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         password = findViewById(R.id.settingsPassword);
         update= findViewById(R.id.settingsUpdateButton);
         pic = findViewById(R.id.settingsImage);
+        seterror = findViewById(R.id.settingsError);
 
 
         name.setText(CurrentSession.CurrentUser.getName());
@@ -145,6 +147,7 @@ public class SettingsActivity extends AppCompatActivity {
                 updatedUser.setName(name.getText().toString());
                 updatedUser.setEmail(email.getText().toString());
                 updatedUser.setPassword(password.getText().toString());
+                updatedUser.setConfirmPassword(password.getText().toString());
 
 //                File image = new File("file://" +imageURi.getHost().toString() + imageURi.getPath().toString());
 /*                File imagetest = new File(imageURi.toString());
@@ -173,7 +176,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 Log.d("crashfixImageUpload", response.body().toString());
                                 CurrentSession.CurrentUser.setPicurl(response.body());
                                 updatedUser.setPicurl(response.body());
-                                CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString());
+                                CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString(), seterror);
 
                             } else {
                                 Log.d("uploadImageNet", "unsuc");
@@ -187,7 +190,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     });
                 }else {
-                    CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString());
+                    CurrentSession.updateUser(updatedUser, getApplicationContext(), CurrentSession.CurrentUser.getEmail(), CurrentSession.CurrentUser.getPassword().toString(), seterror);
                 }
             }
         });
