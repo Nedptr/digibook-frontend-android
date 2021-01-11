@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,7 +72,9 @@ public class SearchResultsExtend extends AppCompatActivity {
 
         Log.d("null5ra", bookinfo.getItems().get(pos).getVolumeInfo().getTitle().toString());
         title.setText(bookinfo.getItems().get(pos).getVolumeInfo().getTitle());
-        author.setText(bookinfo.getItems().get(pos).getId());
+        if(bookinfo.getItems().get(pos).getVolumeInfo().getAuthors() != null) {
+            author.setText(bookinfo.getItems().get(pos).getVolumeInfo().getAuthors().toString());
+        }
         if(bookinfo.getItems().get(pos).getVolumeInfo().getImageLinks().getThumbnail() != null) {
             Glide.with(getApplicationContext()).load(bookinfo.getItems().get(pos).getVolumeInfo().getImageLinks().getThumbnail()).into(cover);
         }else{
@@ -85,10 +88,10 @@ public class SearchResultsExtend extends AppCompatActivity {
             fav_count.setText(String.valueOf(db_book.getFavlist().size()));
             // fav button color
             if(db_book.getFavlist().contains(CurrentSession.CurrentUser.getEmail())){
-                fav.setBackgroundColor(Color.BLUE);
-                fav_count.setTextColor(Color.BLUE);
+                fav.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fav_color)));
+                fav_count.setTextColor(getResources().getColor(R.color.fav_color));
             }else{
-                fav.setBackgroundColor(Color.GRAY);
+                fav.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_color)));
                 fav_count.setTextColor(Color.GRAY);
             }
         }else{
@@ -100,10 +103,10 @@ public class SearchResultsExtend extends AppCompatActivity {
             upvote_count.setText(String.valueOf(db_book.getUpvotelist().size()));
             // upvote button color
             if(db_book.getUpvotelist().contains(CurrentSession.CurrentUser.getEmail())){
-                upvote.setBackgroundColor(Color.BLUE);
-                upvote_count.setTextColor(Color.BLUE);
+                upvote.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.like_color)));
+                upvote_count.setTextColor(getResources().getColor(R.color.like_color));
             }else{
-                upvote.setBackgroundColor(Color.GRAY);
+                upvote.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_color)));
                 upvote_count.setTextColor(Color.GRAY);
             }
         }else{
@@ -146,14 +149,14 @@ public class SearchResultsExtend extends AppCompatActivity {
         upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentSession.addupvote(CurrentSession.CurrentUser.getEmail(), bookinfo.getItems().get(pos).getId(), upvote, upvote_count);
+                CurrentSession.addupvote(CurrentSession.CurrentUser.getEmail(), bookinfo.getItems().get(pos).getId(), upvote, upvote_count, getApplicationContext());
             }
         });
 
         fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentSession.addfav(CurrentSession.CurrentUser.getEmail(), bookinfo.getItems().get(pos).getId(), fav, fav_count);
+                CurrentSession.addfav(CurrentSession.CurrentUser.getEmail(), bookinfo.getItems().get(pos).getId(), fav, fav_count, getApplicationContext());
 
             }
         });

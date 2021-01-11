@@ -40,6 +40,7 @@ public class profile_fav_RVAdapter extends RecyclerView.Adapter<profile_fav_RVAd
         holder.likes_count.setText(String.valueOf(favbooks.get(position).getUpvotelist().size()));
         holder.fav_count.setText(String.valueOf(favbooks.get(position).getFavlist().size()));
         holder.title.setText(favbooks.get(position).getBookname());
+        holder.authors.setText(favbooks.get(position).getBookauthor().toString());
         Glide.with(context).load(favbooks.get(position).getBookcover()).into(holder.cover);
     }
 
@@ -51,7 +52,7 @@ public class profile_fav_RVAdapter extends RecyclerView.Adapter<profile_fav_RVAd
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         ImageView cover;
-        TextView likes_count, fav_count, title;
+        TextView likes_count, fav_count, title, authors;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +60,8 @@ public class profile_fav_RVAdapter extends RecyclerView.Adapter<profile_fav_RVAd
             likes_count = itemView.findViewById(R.id.profile_fav_likes_count);
             fav_count = itemView.findViewById(R.id.profile_fav_count);
             title = itemView.findViewById(R.id.profile_fav_title);
+            authors = itemView.findViewById(R.id.profile_fav_authors);
+
         }
     }
 }

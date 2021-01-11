@@ -177,6 +177,7 @@ public class SearchFragment extends Fragment {
                         //Log.d("hello", data.getExtras().get("image_uri").toString());
                         try {
                             CurrentSession.uploadImageSearch(selectedImage, getContext());
+                            Toast.makeText(getContext(),"Searching.. Please Wait..",Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -188,6 +189,7 @@ public class SearchFragment extends Fragment {
                         Uri selectedImage = data.getData();
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
+                            Toast.makeText(getContext(),"Searching.. Please Wait..",Toast.LENGTH_LONG).show();
                             CurrentSession.uploadImageSearch(bitmap, getContext());
                         } catch (IOException e) {
                             e.printStackTrace();

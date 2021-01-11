@@ -2,6 +2,7 @@ package com.example.digibook.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import com.example.digibook.SettingsActivity;
 import com.example.digibook.home_viewcomments;
 import com.example.digibook.models.Post;
 import com.example.digibook.utilities.CurrentSession;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -51,17 +54,18 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
         //filling items(post)
         Glide.with(context).load(APIclient.base_url + postData.get(position).getPicurl()).into(holder.pic);
         holder.text.setText(postData.get(position).getText());
+        holder.name.setText(postData.get(position).getName());
         if(postData.get(position).getLikesList()!=null) {
             String n = String.valueOf(postData.get(position).getLikesList().size());
             holder.likesCount.setText(n);
             //maybe not hardcode it in frontend and do isPostLiked() route in server
             // like button COLORING
             if(HomeRVAdapter.postData.get(position).getLikesList().contains(CurrentSession.CurrentUser.getEmail())) {
-                holder.likeButton.setBackgroundColor(Color.BLUE);
-                holder.likesCount.setTextColor(Color.BLUE);
+                holder.likeButton.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.like_color)));
+                holder.likesCount.setTextColor(context.getResources().getColor(R.color.like_color));
             }else{
-                holder.likeButton.setBackgroundColor(Color.GRAY);
-                holder.likesCount.setTextColor(Color.GRAY);
+                holder.likeButton.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.grey_color)));
+                holder.likesCount.setTextColor(context.getResources().getColor(R.color.grey_color));
             }
         }else{
             holder.likesCount.setText("0");
@@ -77,7 +81,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             public void onClick(View v) {
                 Log.d("debuging", "itemClicked position " + String.valueOf(position));
                 Log.d("debuging", "this is item position with getadappos: " + String.valueOf(holder.getAdapterPosition()));
-                CurrentSession.likePost(CurrentSession.CurrentUser.getEmail(), postData.get(holder.getAdapterPosition()).getEmail(), postData.get(holder.getAdapterPosition()).getDate(), holder.likeButton, holder.likesCount, holder.getAdapterPosition());
+                CurrentSession.likePost(CurrentSession.CurrentUser.getEmail(), postData.get(holder.getAdapterPosition()).getEmail(), postData.get(holder.getAdapterPosition()).getDate(), holder.likeButton, holder.likesCount, holder.getAdapterPosition(), context);
                 //notifyDataSetChanged();
 
                 // add notification
@@ -112,6 +116,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
         Button likeButton;
         TextView viewComments;
         Context ct;
+        TextView name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,6 +126,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.MyViewHold
             pic = itemView.findViewById(R.id.homePostUserPicture);
             likeButton = itemView.findViewById(R.id.homeLikeButton);
             viewComments = itemView.findViewById(R.id.homeComment);
+            name = itemView.findViewById(R.id.homePostName);
 
 
         }

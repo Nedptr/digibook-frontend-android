@@ -3,10 +3,12 @@ package com.example.digibook;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,16 +46,23 @@ public class LoginActivity extends AppCompatActivity {
     EditText loginUsername;
     EditText loginPassword;
     TextView loginError;
+    CheckBox remember;
+
+    public static final String FILE_NAME = "com.example.digibook.shared";
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
+
         //Initializing Views
         signInButton = findViewById(R.id.sign_in_button);
         registerAct = findViewById(R.id.login);
         loginButton = findViewById(R.id.loginButton);
+
 
         //login Button onclick listener
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         loginUsername = findViewById(R.id.loginUsername);
         loginPassword = findViewById(R.id.loginPassword);
         loginError = findViewById(R.id.loginError);
+        remember = findViewById(R.id.login_checkbox);
         String email = loginUsername.getText().toString();
         String password = loginPassword.getText().toString();
         User user = new User();
@@ -131,6 +141,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if(response.isSuccessful()) {
+
+                    //cache
+
+                    if(remember.isChecked()){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("EMAIL", email);
+                        editor.putString("PASSWORD", email);
+                        editor.apply();
+                    }
+
                     Toast.makeText(LoginActivity.this, response.body() ,Toast.LENGTH_SHORT).show();
                     assert response.body() != null;
                     Log.d("loginNet", response.body());

@@ -94,14 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // PERMISSION
-                if(checkPermissionForReadExtertalStorage() == false) {
-                    try {
-                        requestPermissionForReadExtertalStorage();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+
 
                 final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
@@ -114,10 +107,24 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int item) {
 
                         if (options[item].equals("Take Photo")) {
+                            if(checkPermissionForReadExtertalStorage() == false) {
+                                try {
+                                    requestPermissionForReadExtertalStorage();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(takePicture, 0);
 
                         } else if (options[item].equals("Choose from Gallery")) {
+                            if(checkPermissionForReadExtertalStorage() == false) {
+                                try {
+                                    requestPermissionForReadExtertalStorage();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(pickPhoto , 1);
 

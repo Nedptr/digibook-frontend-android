@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment {
     ImageView profilePic;
     EditText textPost;
     Button submitButton;
+    TextView addpostname;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +94,9 @@ public class HomeFragment extends Fragment {
         profilePic = viewroot.findViewById(R.id.homeProfilePicture);
         textPost = viewroot.findViewById(R.id.homeWritePost);
         submitButton = viewroot.findViewById(R.id.homeAddPost);
+        addpostname = viewroot.findViewById(R.id.homeAddPostName);
+        //Log.d("postname", CurrentSession.CurrentUser.getName().toString());
+
 
 
         //CurrentSession.getAllPosts();
@@ -101,6 +105,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if(response.isSuccessful()) {
+                    addpostname.setText(CurrentSession.CurrentUser.getName());
                     HomeRVAdapter myAdapter = new HomeRVAdapter(getContext(), response.body());
                     Glide.with(getContext()).load(APIclient.base_url + CurrentSession.CurrentUser.getPicurl()).into(profilePic);
                     recyclerView.setAdapter(myAdapter);

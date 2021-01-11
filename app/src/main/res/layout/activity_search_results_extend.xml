@@ -9,83 +9,143 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/extendConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="328dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/extendToolbar">
 
-        <TextView
-            android:id="@+id/extendbook_fav_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="168dp"
-            android:layout_marginEnd="78dp"
-            android:layout_marginBottom="13dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/extendbook_fav"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/extendbook_fav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
-            android:text="addFav"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/extendbook_upvote" />
-
-        <TextView
-            android:id="@+id/extendbook_upvote_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="168dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/extendbook_upvote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginEnd="152dp"
-            android:text="UpVote"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/extendbook_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/extendbook_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="48dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/extendbook_image"
-            app:layout_constraintTop_toBottomOf="@+id/extendbook_author" />
-
-        <ImageView
-            android:id="@+id/extendbook_image"
-            android:layout_width="159dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:weightSum="10">
+
+            <ImageView
+                android:id="@+id/extendbook_image"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_weight="3"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginTop="36dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/textView120"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="Title: "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/extendbook_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="0.7"
+                        android:text="title"
+                        android:textStyle="italic" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/textView130"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="Authors: "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/extendbook_author"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="0.7"
+                        android:text="N/A"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/extendbook_upvote_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="n_fav"
+                            android:textColor="@android:color/holo_blue_light"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/extendbook_upvote"
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/ic_baseline_thumb_up_24"
+                            android:backgroundTint="@android:color/holo_blue_light" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/extendbook_fav_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="n_likes"
+                            android:textColor="@android:color/holo_red_light"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/extendbook_fav"
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/ic_baseline_favorite_24"
+                            android:backgroundTint="@android:color/holo_red_light" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.Toolbar

@@ -76,7 +76,9 @@ public class SearchResultsRVAdapter extends RecyclerView.Adapter<SearchResultsRV
                 // extend book call
                 Book book = new Book();
                 book.setBookname(bookdata.get(position).getVolumeInfo().getTitle());
-                //book.setBookauthor(bookdata.get(position).getVolumeInfo().getAuthors().toString());
+                if(bookdata.get(position).getVolumeInfo().getAuthors() != null) {
+                    book.setBookauthor(bookdata.get(position).getVolumeInfo().getAuthors().toString());
+                }
                 book.setBookcover(bookdata.get(position).getVolumeInfo().getImageLinks().getThumbnail());
                 book.setBookid(bookdata.get(position).getId());
                 Call<Book> extendbookcall = APIclient.apIinterface().addbook(book);
@@ -108,7 +110,7 @@ public class SearchResultsRVAdapter extends RecyclerView.Adapter<SearchResultsRV
 
     @Override
     public int getItemCount() {
-        return rawdata.getTotalItems();
+        return bookdata.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

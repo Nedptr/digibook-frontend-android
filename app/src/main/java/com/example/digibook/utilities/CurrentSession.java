@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.inputmethodservice.KeyboardView;
@@ -28,6 +29,7 @@ import com.example.digibook.CommentsRVAdapter;
 import com.example.digibook.LoginActivity;
 import com.example.digibook.MainNavActivity;
 import com.example.digibook.Networking.APIclient;
+import com.example.digibook.R;
 import com.example.digibook.RegisterActivity;
 import com.example.digibook.SearchResults;
 import com.example.digibook.SearchResultsExtendRVAdapter;
@@ -102,9 +104,14 @@ public class CurrentSession {
             public void onResponse(Call<BookSearch> call, Response<BookSearch> response) {
                 if(response.isSuccessful()){
                     Log.d("uploadImageNet", response.body().getTotalItems().toString());
-                    Intent data = new Intent( ct, SearchResults.class);
-                    data.putExtra("data", response.body());
-                    ct.startActivity(data);
+                    if(response.body().getTotalItems() != 0) {
+                        Intent data = new Intent(ct, SearchResults.class);
+                        data.putExtra("data", response.body());
+                        ct.startActivity(data);
+                    }else{
+                        Toast.makeText(ct,"Sorry, No results found! Try again with a better picture",Toast.LENGTH_LONG).show();
+
+                    }
                 }else {
                     Log.d("uploadImageNet", "unsuc");
                 }
@@ -154,22 +161,21 @@ public class CurrentSession {
         });
     }
 
-    public static void likePost(String useremail, String owneremail, String postid, Button likebutton, TextView likecount, int position){
+    public static void likePost(String useremail, String owneremail, String postid, Button likebutton, TextView likecount, int position, Context ct){
         Call<likepostResponse> likepostCall = APIclient.apIinterface().likepost(useremail,owneremail,postid);
         likepostCall.enqueue(new Callback<likepostResponse>() {
             @Override
             public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getStatus().compareTo("Like")==0) {
-                        likebutton.setBackgroundColor(Color.BLUE);
-                        likecount.setTextColor(Color.BLUE);
-                        CurrentSession.addnotification(owneremail, "Liked", postid);
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.like_color)));
+                        likecount.setTextColor(ct.getResources().getColor(R.color.like_color));
+                        CurrentSession.addnotification(owneremail, "Liked your post", postid);
 
                     }else{
-                        likebutton.setBackgroundColor(Color.GRAY);
-                        likecount.setTextColor(Color.GRAY);
-                        CurrentSession.addnotification(owneremail, "Disliked", postid);
-
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.grey_color)));
+                        likecount.setTextColor(ct.getResources().getColor(R.color.grey_color));
+                        CurrentSession.addnotification(owneremail, "Disliked your post", postid);
                     }
                     likecount.setText(response.body().getCount());
                     List<String> newList;
@@ -354,19 +360,19 @@ public class CurrentSession {
         });
     }*/
 
-    public static void addupvote(String useremail, String bookid, Button likebutton, TextView likecount){
+    public static void addupvote(String useremail, String bookid, Button likebutton, TextView likecount, Context ct){
         Call<likepostResponse> upvotecall = APIclient.apIinterface().addupvote(bookid,useremail);
         upvotecall.enqueue(new Callback<likepostResponse>() {
             @Override
             public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getStatus().compareTo("Like")==0) {
-                        likebutton.setBackgroundColor(Color.BLUE);
-                        likecount.setTextColor(Color.BLUE);
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.like_color)));
+                        likecount.setTextColor(ct.getResources().getColor(R.color.like_color));
                         //CurrentSession.addnotification(owneremail, "Liked", bookid);
 
                     }else{
-                        likebutton.setBackgroundColor(Color.GRAY);
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.grey_color)));
                         likecount.setTextColor(Color.GRAY);
                         //CurrentSession.addnotification(owneremail, "Disliked", bookid);
 
@@ -387,19 +393,19 @@ public class CurrentSession {
         });
     }
 
-    public static void addfav(String useremail, String bookid, Button likebutton, TextView likecount){
+    public static void addfav(String useremail, String bookid, Button likebutton, TextView likecount, Context ct){
         Call<likepostResponse> addfavcall = APIclient.apIinterface().addbookfav(bookid,useremail);
         addfavcall.enqueue(new Callback<likepostResponse>() {
             @Override
             public void onResponse(Call<likepostResponse> call, Response<likepostResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getStatus().compareTo("Like")==0) {
-                        likebutton.setBackgroundColor(Color.BLUE);
-                        likecount.setTextColor(Color.BLUE);
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.fav_color)));
+                        likecount.setTextColor(ct.getResources().getColor(R.color.fav_color));
                         //CurrentSession.addnotification(owneremail, "Liked", bookid);
 
                     }else{
-                        likebutton.setBackgroundColor(Color.GRAY);
+                        likebutton.setBackgroundTintList(ColorStateList.valueOf(ct.getResources().getColor(R.color.grey_color)));
                         likecount.setTextColor(Color.GRAY);
                         //CurrentSession.addnotification(owneremail, "Disliked", bookid);
 
