@@ -16,14 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SearchResultsExtend"></activity>
-        <activity android:name=".home_viewcomments" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SearchResultsExtend" android:screenOrientation="portrait" ></activity>
+        <activity android:name=".home_viewcomments"/>
+        <activity android:name=".SettingsActivity" android:screenOrientation="portrait" />
         <activity android:name=".SearchResults" />
-        <activity android:name=".MainNavActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainNavActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RegisterActivity" android:screenOrientation="portrait" />
+        <activity android:name=".HomeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

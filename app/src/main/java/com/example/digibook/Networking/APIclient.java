@@ -10,7 +10,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class APIclient {
 
     // Define base url
-    public static String base_url = "http://192.168.42.227:3000/";
+    public static String base_url = "http://192.168.42.236:3000/";
 
     //Retrofit instance
     public static Retrofit getClient(){

@@ -146,7 +146,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="117dp"
         android:background="#0080FF"
-        android:text="Remember me!"
+        android:text="Keep me logged in!"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

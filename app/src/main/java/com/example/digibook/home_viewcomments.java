@@ -83,7 +83,7 @@ public class home_viewcomments extends AppCompatActivity {
             public void onClick(View v) {
                 if(textComment.getText() != null && textComment.getText().toString().length() != 0) {
                     CurrentSession.addComment(textComment.getText().toString(), getIntent().getStringExtra("postID"), (CommentsRVAdapter) recyclerView.getAdapter(), recyclerView, textComment);
-                    CurrentSession.addnotification(getIntent().getStringExtra("postEmail"), "Commented", getIntent().getStringExtra("postID"));
+                    CurrentSession.addnotification(getIntent().getStringExtra("postEmail"), "Commented on your post", getIntent().getStringExtra("postID"));
                 }else{
                     Toast.makeText(getApplicationContext(),"You must write a comment!",Toast.LENGTH_SHORT).show();
                 }

@@ -136,14 +136,14 @@ public class CurrentSession {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 if(response.isSuccessful()){
-                    Log.d("debuging","itemcount before add : " + String.valueOf(myAdapter.getItemCount()));
-                    Log.d("debuging", "firstpost before: " + HomeRVAdapter.postData.get(0).getText());
-                    Log.d("debuging", "lastpost before: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                    //Log.d("debuging","itemcount before add : " + String.valueOf(myAdapter.getItemCount()));
+                    //Log.d("debuging", "firstpost before: " + HomeRVAdapter.postData.get(0).getText());
+                    //Log.d("debuging", "lastpost before: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
                     HomeRVAdapter.postData.add(response.body());
                     myAdapter.notifyDataSetChanged();
-                    Log.d("debuging","itemcount after add : " + String.valueOf(myAdapter.getItemCount()));
-                    Log.d("debuging", "firstpost after: " + HomeRVAdapter.postData.get(0).getText());
-                    Log.d("debuging", "lastpost after: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
+                    //Log.d("debuging","itemcount after add : " + String.valueOf(myAdapter.getItemCount()));
+                    //Log.d("debuging", "firstpost after: " + HomeRVAdapter.postData.get(0).getText());
+                    //Log.d("debuging", "lastpost after: " + HomeRVAdapter.postData.get(HomeRVAdapter.postData.size() - 1).getText());
                     //Log.d("debuging", "current position: " + )
                     recyclerView.scrollToPosition(myAdapter.getItemCount() - 1);
                     textview.getText().clear();
